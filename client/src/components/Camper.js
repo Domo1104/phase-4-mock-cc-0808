@@ -42,6 +42,7 @@ function Camper() {
     <div>
       <h2>{camper.name}'s Activities</h2>
       <ul>
+        {console.log(camper)}
         {camper.activities.map((activity) => (
           <li key={activity.id}>
             {activity.name} | Difficulty: {activity.difficulty}

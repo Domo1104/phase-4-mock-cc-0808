@@ -1,9 +1,9 @@
 class SignupsController < ApplicationController
-    rescue_from ActiveRecord::RecordNotFound, with: :not_found
+    rescue_from ActiveRecord::RecordInvalid, with: :not_found
     #POST /signups
     def create
         signup = Signup.create!(signup_params)
-        render json: signup, only: [:time, :camper_id, :activity_id], include: [activity: {only: [:id, :name, :difficulty]}], 
+        render json: signup.activity, only: [:time, :camper_id, :activity_id], include: [activity: {only: [:id, :name, :difficulty]}], 
         status: :created
     end
 
@@ -13,7 +13,8 @@ class SignupsController < ApplicationController
         params.permit(:time, :camper_id, :activity_id)
     end
 
-    def not_found
-        render json: { error: "Validation errors" }, status: 500
+    def not_found(error)
+        # byebug
+        render json: { errors: error.record.errors.full_messages }, status: 422
     end
 end
